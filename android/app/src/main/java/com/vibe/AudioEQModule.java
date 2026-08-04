@@ -52,10 +52,6 @@ public class AudioEQModule extends ReactContextBaseJavaModule {
     }
 
     private int getAudioSessionId() {
-        try {
-            AudioManager am = (AudioManager) reactContext.getSystemService(Context.AUDIO_SERVICE);
-            if (am != null) return am.getAudioSessionId();
-        } catch (Exception ignored) {}
         return 0;
     }
 
@@ -83,7 +79,7 @@ public class AudioEQModule extends ReactContextBaseJavaModule {
     public void getBandFreqRange(int band, Promise promise) {
         try {
             ensureInitialized(promise);
-            short[] range = equalizer.getBandFreqRange((short) band);
+            int[] range = equalizer.getBandFreqRange((short) band);
             WritableArray arr = Arguments.createArray();
             arr.pushDouble(range[0]);
             arr.pushDouble(range[1]);
