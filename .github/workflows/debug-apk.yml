@@ -60,6 +60,21 @@ jobs:
             android/app/build/outputs/apk/release/app-release.apk
           retention-days: 30
 
+      - name: Upload C++ Build Logs on Failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cxx-build-logs-${{ github.sha }}
+          path: |
+            **/build/intermediates/cxx/**/CMakeError.log
+            **/build/intermediates/cxx/**/CMakeOutput.log
+            **/.cxx/**/CMakeError.log
+            **/.cxx/**/CMakeOutput.log
+            **/build/intermediates/cxx/**/*.txt
+            **/.cxx/**/*.txt
+            **/.cxx/**/*.log
+          retention-days: 7
+
       - name: Comment APK link on PR
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
