@@ -24,6 +24,7 @@
     "@vibrant/core": "^4.0.4",
     "axios": "^1.19.0",
     "date-fns": "^4.4.0",
+    "expo-modules-core": "^57.0.8",
     "lodash": "^4.18.1",
     "react": "19.2.3",
     "react-native": "0.86.2",
