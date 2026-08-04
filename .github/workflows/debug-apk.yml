@@ -40,7 +40,7 @@ jobs:
           restore-keys: gradle-
 
       - name: Install node_modules
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Create .env file
         run: echo "LASTFM_API_KEY=${{ secrets.LASTFM_API_KEY }}" > .env
