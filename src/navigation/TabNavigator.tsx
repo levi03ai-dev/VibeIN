@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { BaseColors, hexToRgba } from '../theme/colors';
@@ -19,22 +19,6 @@ const icons: Record<string, [string, string]> = {
   Library: ['library-outline', 'library'],
   Charts: ['stats-chart-outline', 'stats-chart'],
   Settings: ['settings-outline', 'settings'],
-};
-
-const TabBar: React.FC = () => {
-  const accent = usePlayerStore(s => s.accentColor);
-
-  return (
-    <View
-      style={[
-        styles.tabBarContainer,
-        {
-          backgroundColor: hexToRgba('#0A0A0A', 0.95),
-          borderColor: BaseColors.border,
-        },
-      ]}
-    />
-  );
 };
 
 const TabNavigator: React.FC = () => {
@@ -57,6 +41,7 @@ const TabNavigator: React.FC = () => {
         },
         tabBarActiveTintColor: accent,
         tabBarInactiveTintColor: BaseColors.text2,
+        // eslint-disable-next-line react/no-unstable-nested-components
         tabBarIcon: ({ focused, color, size }) => {
           const [outline, filled] = icons[route.name] ?? ['ellipse-outline', 'ellipse'];
           return (
@@ -78,15 +63,6 @@ const TabNavigator: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  tabBarContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 64,
-    borderTopWidth: StyleSheet.hairlineWidth,
-  },
-});
+
 
 export default TabNavigator;

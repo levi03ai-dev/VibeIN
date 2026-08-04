@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ScrollView } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FastImage from 'react-native-fast-image';
 import { BaseColors, hexToRgba } from '../theme/colors';
@@ -56,7 +56,7 @@ const AlbumScreen: React.FC<{ route: any; navigation: any }> = ({ route, navigat
     return () => {
       active = false;
     };
-  }, [album?.id]);
+  }, [album?.id, album?.name, album?.image]);
 
   return (
     <View style={styles.root}>
@@ -67,45 +67,47 @@ const AlbumScreen: React.FC<{ route: any; navigation: any }> = ({ route, navigat
         <Text style={styles.headerTitle}>Album</Text>
       </View>
 
-      <View style={styles.hero}>
-        {image ? (
-          <FastImage source={{ uri: image }} style={styles.heroArt} resizeMode="cover" />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        <View style={styles.hero}>
+          {image ? (
+            <FastImage source={{ uri: image }} style={styles.heroArt} resizeMode="cover" />
+          ) : (
+            <View style={[styles.heroArt, styles.placeholder]}>
+              <Ionicons name="albums-outline" size={48} color={BaseColors.text3} />
+            </View>
+          )}
+          <Text style={styles.name}>{name}</Text>
+        </View>
+
+        {loading ? (
+          <View style={styles.loading}>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Shimmer key={i} height={56} style={{ marginBottom: 12 }} />
+            ))}
+          </View>
+        ) : songs.length === 0 ? (
+          <EmptyState icon="albums-outline" title="No songs found" subtitle="Couldn't load this album." />
         ) : (
-          <View style={[styles.heroArt, styles.placeholder]}>
-            <Ionicons name="albums-outline" size={48} color={BaseColors.text3} />
+          <View>
+            <Pressable onPress={() => playQueue(songs, 0)} style={styles.playAll}>
+              <View style={styles.playAllIcon}>
+                <Ionicons name="play" size={18} color={BaseColors.textInverse} />
+              </View>
+              <Text style={styles.playAllText}>Play Album</Text>
+            </Pressable>
+            {songs.map((t, i) => (
+              <SongRow
+                key={`${t.id}-${i}`}
+                title={t.title}
+                artist={t.artist}
+                image={t.image}
+                duration={t.duration}
+                onPress={() => playTrack(t)}
+              />
+            ))}
           </View>
         )}
-        <Text style={styles.name}>{name}</Text>
-      </View>
-
-      {loading ? (
-        <View style={styles.loading}>
-          {Array.from({ length: 6 }).map((_, i) => (
-            <Shimmer key={i} height={56} style={{ marginBottom: 12 }} />
-          ))}
-        </View>
-      ) : songs.length === 0 ? (
-        <EmptyState icon="albums-outline" title="No songs found" subtitle="Couldn't load this album." />
-      ) : (
-        <View>
-          <Pressable onPress={() => playQueue(songs, 0)} style={styles.playAll}>
-            <View style={styles.playAllIcon}>
-              <Ionicons name="play" size={18} color={BaseColors.textInverse} />
-            </View>
-            <Text style={styles.playAllText}>Play Album</Text>
-          </Pressable>
-          {songs.map((t, i) => (
-            <SongRow
-              key={`${t.id}-${i}`}
-              title={t.title}
-              artist={t.artist}
-              image={t.image}
-              duration={t.duration}
-              onPress={() => playTrack(t)}
-            />
-          ))}
-        </View>
-      )}
+      </ScrollView>
     </View>
   );
 };
@@ -122,6 +124,7 @@ const styles = StyleSheet.create({
   },
   backBtn: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center', backgroundColor: hexToRgba(BaseColors.text1, 0.06) },
   headerTitle: { ...Type.h3, color: BaseColors.text1 },
+  scrollContent: { paddingBottom: 140 },
   hero: { alignItems: 'center', gap: S.md, paddingHorizontal: S.lg, paddingTop: S.md, paddingBottom: S.lg },
   heroArt: { width: 220, height: 220, borderRadius: 16 },
   placeholder: { backgroundColor: BaseColors.bg2, alignItems: 'center', justifyContent: 'center' },

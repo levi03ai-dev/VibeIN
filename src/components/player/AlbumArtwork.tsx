@@ -8,10 +8,8 @@ import Animated, {
   withTiming,
   withRepeat,
   interpolate,
-  Easing,
 } from 'react-native-reanimated';
 import { Springs, Timings } from '../../theme/animations';
-import { hexToRgba } from '../../theme/colors';
 
 interface AlbumArtworkProps {
   image?: string;
@@ -36,11 +34,11 @@ const AlbumArtwork: React.FC<AlbumArtworkProps> = ({
   useEffect(() => {
     scale.value = withSpring(isPlaying ? 1 : 0.88, Springs.gentle);
     glow.value = withTiming(isPlaying ? 1 : 0, { duration: Timings.normal });
-  }, [isPlaying]);
+  }, [isPlaying, scale, glow]);
 
   useEffect(() => {
     opacity.value = withTiming(1, { duration: Timings.normal });
-  }, []);
+  }, [opacity]);
 
   useEffect(() => {
     if (rotating) {
@@ -51,7 +49,7 @@ const AlbumArtwork: React.FC<AlbumArtworkProps> = ({
         );
       }
     }
-  }, [rotating, isPlaying]);
+  }, [rotating, isPlaying, rotation]);
 
   const artStyle = useAnimatedStyle(() => ({
     transform: [

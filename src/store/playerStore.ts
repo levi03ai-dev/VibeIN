@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import TrackPlayer, {
   RepeatMode as TpRepeatMode,
   State,
-  Event,
   Capability,
   AppKilledPlaybackBehavior,
 } from 'react-native-track-player';
@@ -91,14 +90,7 @@ const trackToTpTrack = (t: VibeTrack) => ({
   duration: t.duration,
 });
 
-const resetShuffleOrder = (queue: VibeTrack[]): VibeTrack[] => {
-  const copy = [...queue];
-  for (let i = copy.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
-};
+
 
 export const usePlayerStore = create<PlayerStore>((set, get) => ({
   currentTrack: null,
@@ -179,16 +171,18 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   },
 
   skipNext: async () => {
-    const { repeatMode, queue, queueIndex } = get();
+    const { repeatMode, queue, queueIndex, shuffleEnabled } = get();
     if (!queue.length) return;
     if (repeatMode === 'track') return;
     let next = queueIndex + 1;
-    if (next >= queue.length) {
+    if (shuffleEnabled && queue.length > 1) {
+      do {
+        next = Math.floor(Math.random() * queue.length);
+      } while (next === queueIndex);
+    } else if (next >= queue.length) {
       if (repeatMode === 'queue') next = 0;
       else return;
     }
-    await TrackPlayer.skipToNext();
-    await TrackPlayer.play();
     const track = queue[next];
     if (track) {
       const resolved = { ...track, url: track.url };
@@ -198,22 +192,27 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
         // keep original url
       }
       await TrackPlayer.load({ ...trackToTpTrack(resolved), url: resolved.url ?? "" });
+      await TrackPlayer.play();
       get().updatePalette(track.image);
     }
     set({ queueIndex: next, currentTrack: track, isPlaying: true });
   },
 
   skipPrevious: async () => {
-    const { queue, queueIndex } = get();
+    const { queue, queueIndex, shuffleEnabled, repeatMode } = get();
     if (!queue.length) return;
     if (get().position > 3) {
       await TrackPlayer.seekTo(0);
       return;
     }
     let prev = queueIndex - 1;
-    if (prev < 0) prev = 0;
-    await TrackPlayer.skipToPrevious();
-    await TrackPlayer.play();
+    if (shuffleEnabled && queue.length > 1) {
+      do {
+        prev = Math.floor(Math.random() * queue.length);
+      } while (prev === queueIndex);
+    } else if (prev < 0) {
+      prev = repeatMode === 'queue' ? queue.length - 1 : 0;
+    }
     const track = queue[prev];
     if (track) {
       const resolved = { ...track, url: track.url };
@@ -223,6 +222,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
         // keep original url
       }
       await TrackPlayer.load({ ...trackToTpTrack(resolved), url: resolved.url ?? "" });
+      await TrackPlayer.play();
       get().updatePalette(track.image);
     }
     set({ queueIndex: prev, currentTrack: track, isPlaying: true });

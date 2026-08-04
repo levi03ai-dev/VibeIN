@@ -15,7 +15,7 @@ interface LRCLibHit {
   artistName?: string;
 }
 
-const client = axios.create({ timeout: 12000 });
+const client = axios.create({ baseURL: LRCLIB, timeout: 12000 });
 
 export const lyricsApi = {
   async get(

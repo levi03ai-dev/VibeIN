@@ -30,7 +30,7 @@ export const useSleepTimer = () => {
     tick();
     const interval = setInterval(tick, 1000);
     return () => clearInterval(interval);
-  }, [timer.endAt, timer.type]);
+  }, [timer.endAt, timer.type, setTimer]);
 
   return { timer, remaining };
 };

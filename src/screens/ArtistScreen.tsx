@@ -4,7 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import FastImage from 'react-native-fast-image';
 import { BaseColors, hexToRgba } from '../theme/colors';
 import { Type } from '../theme/typography';
-import { S, R } from '../theme/spacing';
+import { S } from '../theme/spacing';
 import { saavn } from '../api/saavn';
 import { lastfm } from '../api/lastfm';
 import { usePlayerStore } from '../store/playerStore';
@@ -17,7 +17,6 @@ import type { VibeTrack, VibeAlbum } from '../types';
 const ArtistScreen: React.FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
   const artist = route.params?.artist;
   const playTrack = usePlayerStore(s => s.playTrack);
-  const playQueue = usePlayerStore(s => s.playQueue);
   const [songs, setSongs] = useState<VibeTrack[]>([]);
   const [albums, setAlbums] = useState<VibeAlbum[]>([]);
   const [similar, setSimilar] = useState<any[]>([]);
@@ -66,7 +65,7 @@ const ArtistScreen: React.FC<{ route: any; navigation: any }> = ({ route, naviga
     return () => {
       active = false;
     };
-  }, [artist?.id]);
+  }, [artist?.id, artist?.name]);
 
   return (
     <View style={styles.root}>

@@ -1,7 +1,5 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useLyrics } from '../../hooks/useLyrics';
 import { usePlayerStore } from '../../store/playerStore';
 import LyricLine from './LyricLine';
@@ -15,8 +13,6 @@ interface LyricsViewProps {
   track: VibeTrack | null;
   accent?: string;
 }
-
-const CENTER_FACTOR = 0.4;
 
 const LyricsView: React.FC<LyricsViewProps> = ({ track, accent = '#FFFFFF' }) => {
   const { lines, activeIndex, plain, isSynced, loading, noLyrics } = useLyrics(track);

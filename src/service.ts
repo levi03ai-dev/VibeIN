@@ -1,4 +1,5 @@
 import TrackPlayer, { Event, State } from 'react-native-track-player';
+import { usePlayerStore } from './store/playerStore';
 
 let hasSkipHandler = false;
 let hasQueueEndedHandler = false;
@@ -6,15 +7,15 @@ let hasQueueEndedHandler = false;
 export default async function PlaybackService() {
   TrackPlayer.addEventListener(Event.RemotePlay, () => TrackPlayer.play());
   TrackPlayer.addEventListener(Event.RemotePause, () => TrackPlayer.pause());
-  TrackPlayer.addEventListener(Event.RemoteNext, () => TrackPlayer.skipToNext());
-  TrackPlayer.addEventListener(Event.RemotePrevious, () => TrackPlayer.skipToPrevious());
+  TrackPlayer.addEventListener(Event.RemoteNext, () => usePlayerStore.getState().skipNext());
+  TrackPlayer.addEventListener(Event.RemotePrevious, () => usePlayerStore.getState().skipPrevious());
   TrackPlayer.addEventListener(Event.RemoteSeek, ({ position }) => TrackPlayer.seekTo(position));
   TrackPlayer.addEventListener(Event.RemoteStop, () => TrackPlayer.reset());
 
   TrackPlayer.addEventListener(Event.PlaybackError, async () => {
     try {
       const state = await TrackPlayer.getState();
-      if (state === State.Error) await TrackPlayer.skipToNext();
+      if (state === State.Error) await usePlayerStore.getState().skipNext();
     } catch {
       // ignore
     }
@@ -22,17 +23,20 @@ export default async function PlaybackService() {
 
   if (!hasSkipHandler) {
     hasSkipHandler = true;
-    TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, ({ index }) => {
+    TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, () => {
       TrackPlayer.play().catch(() => {});
     });
   }
 
   if (!hasQueueEndedHandler) {
     hasQueueEndedHandler = true;
-    TrackPlayer.addEventListener(Event.PlaybackQueueEnded, ({ position, track }) => {
-      // repeat logic handled in playerStore via repeatMode
-      if (track !== null && track !== undefined) {
-        // queue ended
+    TrackPlayer.addEventListener(Event.PlaybackQueueEnded, async () => {
+      const store = usePlayerStore.getState();
+      if (store.repeatMode === 'track') {
+        await TrackPlayer.seekTo(0);
+        await TrackPlayer.play();
+      } else {
+        await store.skipNext();
       }
     });
   }

@@ -33,19 +33,18 @@ const EqualizerModal: React.FC<EqualizerModalProps> = ({ visible, onClose }) => 
   const setEqBands = useSettingsStore(s => s.setEqBands);
   const eqPreset = useSettingsStore(s => s.eqPreset);
   const setEqPreset = useSettingsStore(s => s.setEqPreset);
-  const [ready, setReady] = useState(false);
   const [presets, setPresets] = useState<string[]>(EQ_PRESETS);
 
   useEffect(() => {
     if (visible && isAndroid) {
       eq.init().then(() => {
-        setReady(true);
         eq.getPresets().then(p => {
           if (p && p.length) setPresets(p);
         });
         if (eqEnabled) eq.enabled(true);
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
   const toggle = async () => {

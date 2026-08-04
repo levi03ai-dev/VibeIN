@@ -61,9 +61,4 @@ export const useAccentColor = (imageUri?: string): string => {
   return palette.vibrant || palette.light || palette.dominant || '#FFFFFF';
 };
 
-export const useTrackPalette = (): { palette: Palette; accent: string } => {
-  const [palette, setPalette] = useState<Palette>(DEFAULT_PALETTE);
-  const [accent, setAccent] = useState('#FFFFFF');
 
-  return { palette, accent };
-};

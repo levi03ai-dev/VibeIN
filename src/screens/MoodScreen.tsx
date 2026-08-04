@@ -43,7 +43,7 @@ const toVibeTrack = (t: any): VibeTrack => ({
   source: 'lastfm',
 });
 
-const MoodScreen: React.FC<{ route: any }> = ({ route }) => {
+const MoodScreen: React.FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
   const mood: string = route.params?.mood ?? 'Chill';
   const emoji: string = route.params?.emoji ?? '';
   const playQueue = usePlayerStore(s => s.playQueue);
@@ -75,6 +75,14 @@ const MoodScreen: React.FC<{ route: any }> = ({ route }) => {
   return (
     <View style={styles.root}>
       <LinearGradient colors={[hexToRgba(colors[0], 0.25), BaseColors.bg0]} style={styles.bg} />
+      
+      <View style={styles.header}>
+        <Pressable onPress={() => navigation.goBack()} style={styles.backBtn}>
+          <Ionicons name="arrow-back" size={22} color={BaseColors.text1} />
+        </Pressable>
+        <Text style={styles.headerTitle}>Mood</Text>
+      </View>
+
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
         <Text style={styles.title}>
           {emoji} {mood}
@@ -114,7 +122,18 @@ const MoodScreen: React.FC<{ route: any }> = ({ route }) => {
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: BaseColors.bg0 },
   bg: { ...StyleSheet.absoluteFill },
-  content: { paddingHorizontal: S.lg, paddingTop: 64, paddingBottom: 120 },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: S.md,
+    paddingHorizontal: S.lg,
+    paddingTop: 16,
+    paddingBottom: S.sm,
+    zIndex: 10,
+  },
+  backBtn: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center', backgroundColor: hexToRgba(BaseColors.text1, 0.06) },
+  headerTitle: { ...Type.h3, color: BaseColors.text1 },
+  content: { paddingHorizontal: S.lg, paddingTop: S.md, paddingBottom: 120 },
   title: { ...Type.d1, color: BaseColors.text1 },
   subtitle: { ...Type.body, color: BaseColors.text2, marginTop: 4, marginBottom: S.xl },
   actions: { flexDirection: 'row', gap: S.md, marginBottom: S.lg },

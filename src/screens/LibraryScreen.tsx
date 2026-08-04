@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { View, Text, StyleSheet, Pressable, FlatList, ScrollView, TextInput } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { BaseColors, hexToRgba } from '../theme/colors';
@@ -18,11 +19,11 @@ import type { VibeTrack } from '../types';
 type TabKey = 'favorites' | 'history' | 'playlists';
 
 const LibraryScreen: React.FC = () => {
+  const navigation = useNavigation();
   const favorites = useLibraryStore(s => s.favorites);
   const history = useListenHistoryStore(s => s.history);
   const playlists = useLibraryStore(s => s.playlists);
   const createPlaylist = useLibraryStore(s => s.createPlaylist);
-  const removeFavorite = useLibraryStore(s => s.removeFavorite);
   const playTrack = usePlayerStore(s => s.playTrack);
   const currentTrack = usePlayerStore(s => s.currentTrack);
 
@@ -166,7 +167,7 @@ const LibraryScreen: React.FC = () => {
                 key={p.id}
                 name={p.name}
                 count={(p.tracks ?? []).length}
-                onPress={() => {}}
+                onPress={() => (navigation as any).navigate('Playlist', { playlist: p })}
                 onLongPress={() => {}}
               />
             ))}

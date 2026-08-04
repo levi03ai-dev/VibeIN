@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Pressable, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Pressable, TextInput, ScrollView } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FastImage from 'react-native-fast-image';
 import { BaseColors, hexToRgba } from '../theme/colors';
@@ -38,74 +38,76 @@ const PlaylistScreen: React.FC<{ route: any; navigation: any }> = ({ route, navi
         </Pressable>
       </View>
 
-      {editing ? (
-        <View style={styles.editRow}>
-          <TextInput
-            autoFocus
-            value={name}
-            onChangeText={setName}
-            placeholder="Playlist name"
-            placeholderTextColor={BaseColors.text3}
-            style={styles.input}
-          />
-          <Pressable
-            onPress={() => {
-              if (name.trim()) {
-                renamePlaylist(live?.id ?? '', name.trim());
-              }
-              setEditing(false);
-            }}
-            style={styles.saveBtn}
-          >
-            <Ionicons name="checkmark" size={20} color={BaseColors.textInverse} />
-          </Pressable>
-          <Pressable
-            onPress={() => {
-              deletePlaylist(live?.id ?? '');
-              navigation.goBack();
-            }}
-            style={styles.deleteBtn}
-          >
-            <Ionicons name="trash-outline" size={20} color={BaseColors.error} />
-          </Pressable>
-        </View>
-      ) : (
-        <View style={styles.hero}>
-          {live?.image ? (
-            <FastImage source={{ uri: live.image }} style={styles.heroArt} resizeMode="cover" />
-          ) : (
-            <View style={[styles.heroArt, styles.placeholder]}>
-              <Ionicons name="musical-notes" size={40} color={BaseColors.text3} />
-            </View>
-          )}
-          <Text style={styles.name}>{live?.name ?? 'Playlist'}</Text>
-          <Text style={styles.meta}>{tracks.length} songs</Text>
-        </View>
-      )}
-
-      {tracks.length === 0 ? (
-        <EmptyState icon="list-outline" title="Empty playlist" subtitle="Add songs from Search or a song menu." />
-      ) : (
-        <View>
-          <Pressable onPress={() => playQueue(tracks, 0)} style={styles.playAll}>
-            <View style={styles.playAllIcon}>
-              <Ionicons name="play" size={18} color={BaseColors.textInverse} />
-            </View>
-            <Text style={styles.playAllText}>Play All</Text>
-          </Pressable>
-          {tracks.map((t: VibeTrack, i: number) => (
-            <SongRow
-              key={`${t.id}-${i}`}
-              title={t.title}
-              artist={t.artist}
-              image={t.image}
-              duration={t.duration}
-              onPress={() => playTrack(t)}
-              onMenuPress={() => removeFromPlaylist(live?.id ?? '', t.id)}
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        {editing ? (
+          <View style={styles.editRow}>
+            <TextInput
+              autoFocus
+              value={name}
+              onChangeText={setName}
+              placeholder="Playlist name"
+              placeholderTextColor={BaseColors.text3}
+              style={styles.input}
             />
-          ))}
-        </View>
-      )}
+            <Pressable
+              onPress={() => {
+                if (name.trim()) {
+                  renamePlaylist(live?.id ?? '', name.trim());
+                }
+                setEditing(false);
+              }}
+              style={styles.saveBtn}
+            >
+              <Ionicons name="checkmark" size={20} color={BaseColors.textInverse} />
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                deletePlaylist(live?.id ?? '');
+                navigation.goBack();
+              }}
+              style={styles.deleteBtn}
+            >
+              <Ionicons name="trash-outline" size={20} color={BaseColors.error} />
+            </Pressable>
+          </View>
+        ) : (
+          <View style={styles.hero}>
+            {live?.image ? (
+              <FastImage source={{ uri: live.image }} style={styles.heroArt} resizeMode="cover" />
+            ) : (
+              <View style={[styles.heroArt, styles.placeholder]}>
+                <Ionicons name="musical-notes" size={40} color={BaseColors.text3} />
+              </View>
+            )}
+            <Text style={styles.name}>{live?.name ?? 'Playlist'}</Text>
+            <Text style={styles.meta}>{tracks.length} songs</Text>
+          </View>
+        )}
+
+        {tracks.length === 0 ? (
+          <EmptyState icon="list-outline" title="Empty playlist" subtitle="Add songs from Search or a song menu." />
+        ) : (
+          <View>
+            <Pressable onPress={() => playQueue(tracks, 0)} style={styles.playAll}>
+              <View style={styles.playAllIcon}>
+                <Ionicons name="play" size={18} color={BaseColors.textInverse} />
+              </View>
+              <Text style={styles.playAllText}>Play All</Text>
+            </Pressable>
+            {tracks.map((t: VibeTrack, i: number) => (
+              <SongRow
+                key={`${t.id}-${i}`}
+                title={t.title}
+                artist={t.artist}
+                image={t.image}
+                duration={t.duration}
+                onPress={() => playTrack(t)}
+                onMenuPress={() => removeFromPlaylist(live?.id ?? '', t.id)}
+              />
+            ))}
+          </View>
+        )}
+      </ScrollView>
     </View>
   );
 };
@@ -122,6 +124,7 @@ const styles = StyleSheet.create({
   },
   backBtn: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center', backgroundColor: hexToRgba(BaseColors.text1, 0.06) },
   headerTitle: { ...Type.h3, color: BaseColors.text1 },
+  scrollContent: { paddingBottom: 140 },
   hero: { alignItems: 'center', paddingVertical: S.lg, gap: S.sm },
   heroArt: { width: 200, height: 200, borderRadius: 16 },
   placeholder: { backgroundColor: BaseColors.bg2, alignItems: 'center', justifyContent: 'center' },

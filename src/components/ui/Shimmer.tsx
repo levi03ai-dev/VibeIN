@@ -7,7 +7,6 @@ import Animated, {
   withTiming,
   Easing,
   interpolate,
-  Extrapolate,
 } from 'react-native-reanimated';
 import LinearGradient from 'react-native-linear-gradient';
 import { BaseColors } from '../../theme/colors';

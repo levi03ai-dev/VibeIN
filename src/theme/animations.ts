@@ -1,4 +1,4 @@
-import type { WithSpringConfig, WithTimingConfig } from 'react-native-reanimated';
+import type { WithSpringConfig } from 'react-native-reanimated';
 
 export const Springs = {
   snappy: { damping: 18, stiffness: 280, mass: 1 } as WithSpringConfig,

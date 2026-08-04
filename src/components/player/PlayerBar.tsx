@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Dimensions } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { usePlayer } from '../../hooks/usePlayer';
 import { usePlayerStore } from '../../store/playerStore';
@@ -45,7 +45,7 @@ const PlayerBar: React.FC = () => {
       style={[
         styles.container,
         {
-          bottom: insets.bottom + 60,
+          bottom: insets.bottom + 64,
           position: 'absolute',
           left: 0,
           right: 0,

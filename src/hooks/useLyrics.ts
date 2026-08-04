@@ -41,6 +41,7 @@ export const useLyrics = (track: VibeTrack | null) => {
     return () => {
       active = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [track?.id]);
 
   const lines: LyricLine[] = useMemo(() => (raw ? parseLRC(raw) : []), [raw]);

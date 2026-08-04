@@ -48,7 +48,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   useEffect(() => {
     cancelWidth.value = withSpring(focused ? 64 : 0, Springs.gentle);
     cancelOpacity.value = withSpring(focused ? 1 : 0, Springs.gentle);
-  }, [focused]);
+  }, [focused, cancelOpacity, cancelWidth]);
 
   const cancelStyle = useAnimatedStyle(() => ({
     width: cancelWidth.value,

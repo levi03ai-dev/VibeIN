@@ -1,4 +1,4 @@
-import type { VibeAlbum, VibeArtist, VibePlaylist, VibeTrack } from '../types';
+import type { VibeAlbum, VibeArtist, VibePlaylist } from '../types';
 
 export type RootStackParamList = {
   MainTabs: undefined;

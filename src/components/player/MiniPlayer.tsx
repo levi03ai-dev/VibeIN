@@ -5,16 +5,14 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
-  withTiming,
   runOnJS,
 } from 'react-native-reanimated';
 import FastImage from 'react-native-fast-image';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { BaseColors, hexToRgba } from '../../theme/colors';
-import { Springs, Timings } from '../../theme/animations';
+import { Springs } from '../../theme/animations';
 import { Type } from '../../theme/typography';
 import { R, S } from '../../theme/spacing';
-import { formatDuration } from '../../utils/format';
 import type { VibeTrack } from '../../types';
 
 interface MiniPlayerProps {
@@ -48,11 +46,12 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({
 }) => {
   const translateY = useSharedValue(100);
   const opacity = useSharedValue(0);
+  const translateX = useSharedValue(0);
 
   React.useEffect(() => {
     translateY.value = withSpring(0, Springs.gentle);
     opacity.value = withSpring(1, Springs.gentle);
-  }, []);
+  }, [opacity, translateY]);
 
   const pan = Gesture.Pan()
     .minDistance(30)
@@ -71,8 +70,6 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({
     });
 
   const progress = duration > 0 ? Math.min(position / duration, 1) : 0;
-
-  const translateX = useSharedValue(0);
   const swipeStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }],
   }));

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { View, Text, StyleSheet, Pressable, TextInput, FlatList } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
@@ -44,6 +45,7 @@ interface SearchResults {
 }
 
 const SearchScreen: React.FC = () => {
+  const navigation = useNavigation();
   const playTrack = usePlayerStore(s => s.playTrack);
   const [query, setQuery] = useState('');
   const debounced = useDebounce(query, 350);
@@ -185,7 +187,7 @@ const SearchScreen: React.FC = () => {
             ) : (
               <View style={styles.resultRow}>
                 {results.artists.map((a, i) => (
-                  <ArtistCard key={`${a.id}-${i}`} name={a.name} image={a.image} size={82} />
+                  <ArtistCard key={`${a.id}-${i}`} name={a.name} image={a.image} size={82} onPress={() => (navigation as any).navigate('Artist', { artist: a })} />
                 ))}
               </View>
             ))}
@@ -195,7 +197,7 @@ const SearchScreen: React.FC = () => {
             ) : (
               <View style={styles.albumGrid}>
                 {results.albums.map((a, i) => (
-                  <AlbumCard key={`${a.id}-${i}`} name={a.name} image={a.image} width={110} />
+                  <AlbumCard key={`${a.id}-${i}`} name={a.name} image={a.image} width={110} onPress={() => (navigation as any).navigate('Album', { album: a })} />
                 ))}
               </View>
             ))}
@@ -205,7 +207,7 @@ const SearchScreen: React.FC = () => {
             ) : (
               <View style={styles.playlistWrap}>
                 {results.playlists.map((p, i) => (
-                  <Pressable key={`${p.id}-${i}`} style={styles.playlistRow}>
+                  <Pressable key={`${p.id}-${i}`} style={styles.playlistRow} onPress={() => (navigation as any).navigate('Playlist', { playlist: p })}>
                     <View style={styles.playlistArt}>
                       <Ionicons name="musical-notes" size={18} color={BaseColors.text3} />
                     </View>

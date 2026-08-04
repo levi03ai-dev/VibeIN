@@ -7,7 +7,6 @@ import {
   Pressable,
   RefreshControl,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { BaseColors, hexToRgba } from '../theme/colors';
@@ -45,7 +44,6 @@ interface HomeData {
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation();
   const playTrack = usePlayerStore(s => s.playTrack);
-  const currentTrack = usePlayerStore(s => s.currentTrack);
   const accent = usePlayerStore(s => s.accentColor);
   const [data, setData] = useState<HomeData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -106,7 +104,7 @@ const HomeScreen: React.FC = () => {
   useEffect(() => {
     setLoading(true);
     load();
-  }, [country]);
+  }, [load]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);

@@ -1,6 +1,5 @@
 import axios from 'axios';
 import Config from 'react-native-config';
-import type { VibeTrack } from '../types';
 
 const LASTFM = 'https://ws.audioscrobbler.com/2.0/';
 const API_KEY = Config.LASTFM_API_KEY || '';
@@ -35,17 +34,6 @@ const mapTrack = (t: any): LastfmTrack => {
   };
 };
 
-const mapArtist = (a: any) => ({
-  name: a.name ?? '',
-  image:
-    (Array.isArray(a.image)
-      ? a.image
-          .filter((i: any) => i && i['#text'])
-          .sort((x: any, y: any) => (x.size === 'extralarge' ? 0 : 0) - (y.size === 'extralarge' ? 0 : 0))
-          .find((i: any) => i.size === 'extralarge')?.['#text']
-      : '') || '',
-  playcount: Number(a.playcount ?? 0),
-});
 
 const get = async (params: Record<string, any>): Promise<any> => {
   try {

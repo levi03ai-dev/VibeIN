@@ -6,7 +6,6 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { Springs } from '../../theme/animations';
-import { BaseColors } from '../../theme/colors';
 import { haptics } from '../../utils/haptics';
 
 interface IconButtonProps {

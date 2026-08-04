@@ -9,7 +9,6 @@ import {
   ScrollView,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import FastImage from 'react-native-fast-image';
 import { BaseColors, hexToRgba } from '../../theme/colors';
 import { Type } from '../../theme/typography';
 import { R, S } from '../../theme/spacing';

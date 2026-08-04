@@ -31,7 +31,6 @@ import PlayerControls from './PlayerControls';
 import VolumeBar from './VolumeBar';
 import LyricsView from '../lyrics/LyricsView';
 import IconButton from '../ui/IconButton';
-import GlassCard from '../ui/GlassCard';
 import { formatDuration } from '../../utils/format';
 import type { VibeTrack } from '../../types';
 
@@ -99,16 +98,16 @@ const NowPlayingSheet: React.FC<NowPlayingSheetProps> = ({
     onQueuePlay(t);
   };
 
-  const open = () => {
+  const open = React.useCallback(() => {
     translateY.value = withSpring(0, Springs.slow);
     backdropOpacity.value = withTiming(1, { duration: 300 });
-  };
+  }, [translateY, backdropOpacity]);
 
-  const close = () => {
+  const close = React.useCallback(() => {
     translateY.value = withSpring(SCREEN_HEIGHT, Springs.slow);
     backdropOpacity.value = withTiming(0, { duration: 300 });
     setTimeout(onClose, 250);
-  };
+  }, [translateY, backdropOpacity, onClose]);
 
   React.useEffect(() => {
     if (visible) open();
@@ -116,7 +115,7 @@ const NowPlayingSheet: React.FC<NowPlayingSheetProps> = ({
       translateY.value = SCREEN_HEIGHT;
       backdropOpacity.value = 0;
     }
-  }, [visible]);
+  }, [visible, open, translateY, backdropOpacity]);
 
   const pan = Gesture.Pan()
     .activateAfterLongPress(200)
@@ -161,14 +160,15 @@ const NowPlayingSheet: React.FC<NowPlayingSheetProps> = ({
         <Pressable style={StyleSheet.absoluteFill} onPress={close}>
           <Animated.View style={[styles.backdrop, backdropStyle, { backgroundColor: backdropColor(paletteBg) }]}>
             {track?.image ? (
-              <BlurView
-                blurType="dark"
-                blurAmount={60}
-                reducedTransparencyFallbackColor="#000"
-                style={StyleSheet.absoluteFill}
-              >
+              <>
                 <FastImage source={{ uri: track.image }} style={StyleSheet.absoluteFill} resizeMode={FastImage.resizeMode.cover} />
-              </BlurView>
+                <BlurView
+                  blurType="dark"
+                  blurAmount={60}
+                  reducedTransparencyFallbackColor="#000"
+                  style={StyleSheet.absoluteFill}
+                />
+              </>
             ) : null}
           </Animated.View>
         </Pressable>

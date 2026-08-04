@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import TrackPlayer, { useProgress, useTrackPlayerEvents, Event, State } from 'react-native-track-player';
+import { useProgress, useTrackPlayerEvents, Event, State } from 'react-native-track-player';
 import { usePlayerStore } from '../store/playerStore';
 import { useListenHistoryStore } from '../store/listenHistoryStore';
 
@@ -19,13 +19,15 @@ export const usePlayer = () => {
     }
   });
 
+  const setPlaybackState = store.setPlaybackState;
+
   useEffect(() => {
-    store.setPlaybackState({
+    setPlaybackState({
       position: progress.position,
       duration: progress.duration,
       buffered: progress.buffered,
     });
-  }, [progress.position, progress.duration, progress.buffered]);
+  }, [progress.position, progress.duration, progress.buffered, setPlaybackState]);
 
   return { ...store };
 };

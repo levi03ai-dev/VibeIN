@@ -81,6 +81,7 @@ const SeekBar: React.FC<SeekBarProps> = ({
     if (!dragging.value && duration > 0) {
       progress.value = clamp(position / duration);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [position, duration]);
 
   return (

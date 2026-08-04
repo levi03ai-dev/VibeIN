@@ -5,7 +5,6 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
   withTiming,
-  interpolate,
 } from 'react-native-reanimated';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { BaseColors, hexToRgba } from '../../theme/colors';
@@ -94,7 +93,6 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({
     onCycleRepeat();
   };
 
-  const iconSize = big ? 30 : 24;
 
   return (
     <View style={styles.row}>

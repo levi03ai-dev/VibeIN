@@ -18,7 +18,6 @@ import { BaseColors, hexToRgba } from '../../theme/colors';
 import { Springs } from '../../theme/animations';
 import { Type } from '../../theme/typography';
 import { R, S } from '../../theme/spacing';
-import GlassCard from '../ui/GlassCard';
 import { usePlayerStore } from '../../store/playerStore';
 import { useLibraryStore } from '../../store/libraryStore';
 import type { VibeTrack } from '../../types';
@@ -56,7 +55,7 @@ const SongMenuModal: React.FC<SongMenuModalProps> = ({
       scale.value = withSpring(1, Springs.bouncy);
       opacity.value = withSpring(1, Springs.bouncy);
     }
-  }, [visible]);
+  }, [visible, opacity, scale]);
 
   const menuStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],

@@ -21,7 +21,7 @@ const toVibeTrack = (t: LastfmTrack): VibeTrack => ({
 
 export const useRecommendations = (currentTrack?: VibeTrack | null): Recommendations => {
   const [similar, setSimilar] = useState<VibeTrack[]>([]);
-  const [personal, setPersonal] = useState<VibeTrack[]>([]);
+  const personal: VibeTrack[] = [];
   const [trending, setTrending] = useState<VibeTrack[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -49,12 +49,15 @@ export const useRecommendations = (currentTrack?: VibeTrack | null): Recommendat
     };
   }, []);
 
+  const title = currentTrack?.title;
+  const artist = currentTrack?.artist;
+
   useEffect(() => {
     let active = true;
     const loadSimilar = async () => {
-      if (!currentTrack) return;
+      if (!title || !artist) return;
       try {
-        const sim = await lastfm.getTrackSimilar(currentTrack.title, currentTrack.artist, 20);
+        const sim = await lastfm.getTrackSimilar(title, artist, 20);
         if (active) setSimilar(toVibeTracks(sim));
       } catch {
         // ignore
@@ -64,7 +67,7 @@ export const useRecommendations = (currentTrack?: VibeTrack | null): Recommendat
     return () => {
       active = false;
     };
-  }, [currentTrack?.id]);
+  }, [title, artist]);
 
   return { similar, personal, trending, loading };
 };

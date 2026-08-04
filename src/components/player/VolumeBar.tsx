@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, GestureResponderEvent } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
-  withSpring,
   runOnJS,
 } from 'react-native-reanimated';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { BaseColors, hexToRgba } from '../../theme/colors';
-import { Springs } from '../../theme/animations';
 import { R, S } from '../../theme/spacing';
-import { formatDuration } from '../../utils/format';
 
 interface VolumeBarProps {
   volume: number;
@@ -25,7 +22,7 @@ const VolumeBar: React.FC<VolumeBarProps> = ({ volume, onChange, accent = '#FFFF
 
   useEffect(() => {
     level.value = volume;
-  }, [volume]);
+  }, [volume, level]);
 
   const clamp = (p: number) => Math.max(0, Math.min(1, p));
 

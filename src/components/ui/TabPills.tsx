@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -34,6 +34,7 @@ const TabPills: React.FC<TabPillsProps> = ({ pills, activeKey, onChange, scrolla
       activeX.value = withSpring(idx * (PILL_W + S.sm), Springs.snappy);
       activeWidth.value = withSpring(PILL_W, Springs.snappy);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeKey, pills.length]);
 
   const indicatorStyle = useAnimatedStyle(() => ({
